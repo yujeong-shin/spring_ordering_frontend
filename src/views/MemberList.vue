@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <div class="page-header"><h1>회원 목록</h1></div>
+    <div class="page-header text-center" style="margin-top: 20px">
+      <h1>회원 목록</h1>
+    </div>
     <table class="table">
       <thead>
         <tr>
@@ -16,7 +18,9 @@
           <td>{{ member.id }}</td>
           <td>{{ member.name }}</td>
           <td>{{ member.email }}</td>
-          <td>{{ member.orderCount }}</td>
+          <td>
+            <a :href="`/member/${member.id}/orders`">{{ member.orderCount }}</a>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -36,7 +40,7 @@ export default {
       const token = localStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {}; // ``(backtick) : javascript 변수를 동적으로 넣을 수 있음
       const response = await axios.get("http://localhost:8080/members", {
-        headers,
+        headers, //"headers":{"Authorization" : "Bearer dfasgasgfsdsdk"} 형식으로 headers는 {}로 감싸서 보내는게 규칙
       });
       this.memberList = response.data;
     } catch (error) {
@@ -45,4 +49,3 @@ export default {
   },
 };
 </script>
-<style lang=""></style>

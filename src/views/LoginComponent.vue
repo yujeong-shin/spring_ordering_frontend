@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="page-header">
+    <div class="page-header text-center" style="margin-top: 20px">
       <h1>로그인</h1>
     </div>
     <!-- 정의한 함수 호출-->
@@ -45,7 +45,7 @@ export default {
         const loginData = { email: this.email, password: this.password };
         const response = await axios.post(
           "http://localhost:8080/doLogin",
-          loginData
+          loginData // {loginData}라고 감싸면 "loginData":{ "email":"admin@test.com", "password":1234 }처럼 JSON으로 감싸짐. 하지만 좋은 설계는 아닌 것 같다.
         );
         const token = response.data.result.token;
         if (token) {
@@ -53,7 +53,11 @@ export default {
           // 1번 예외 해결 : token 값 확인 후 처리
           localStorage.setItem("token", token);
           localStorage.setItem("role", decoded.role);
-          this.$router.push("/");
+          // created 함수는 reload될 때 1번만 실행되는 hook 함수
+          // 그런데, router.push를 통한 reload를 실행시키지 않으므로, Login의 created 함수 호출이 되지 않음
+          // 그래서 새로고침을 해줘야 로그인 버튼이 안보이는 현상이 발생함.
+          // this.$router.push("/");
+          window.location.href = "/";
         } else {
           console.log("200 OK, but request have not token");
           alert("Login Failed");
