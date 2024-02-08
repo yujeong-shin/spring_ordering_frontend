@@ -44,7 +44,7 @@ export default {
         // 2번 예외 해결 : 200상태 값이 아닌 경우 모두 catch로 보냄
         const loginData = { email: this.email, password: this.password };
         const response = await axios.post(
-          "http://localhost:8080/doLogin",
+          `${process.env.VUE_APP_API_BASE_URL}/doLogin`,
           loginData // {loginData}라고 감싸면 "loginData":{ "email":"admin@test.com", "password":1234 }처럼 JSON으로 감싸짐. 하지만 좋은 설계는 아닌 것 같다.
         );
         const token = response.data.result.token;

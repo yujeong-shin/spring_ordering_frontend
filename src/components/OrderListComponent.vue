@@ -58,9 +58,12 @@ export default {
     try {
       const token = localStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
-      const response = await axios.get(this.apiUrl, {
-        headers,
-      });
+      const response = await axios.get(
+        `${process.env.VUE_APP_API_BASE_URL}${this.apiUrl}`,
+        {
+          headers,
+        }
+      );
       this.orderList = response.data;
     } catch (error) {
       console.log(error);
@@ -79,9 +82,12 @@ export default {
         try {
           const token = localStorage.getItem("token");
           const headers = token ? { Authorization: `Bearer ${token}` } : {};
-          await axios.delete(`http://localhost:8080/order/${orderId}/cancel`, {
-            headers,
-          });
+          await axios.delete(
+            `${process.env.VUE_APP_API_BASE_URL}/order/${orderId}/cancel`,
+            {
+              headers,
+            }
+          );
           const order = this.orderList.find((order) => order.id === orderId);
           order.orderStatus = "CANCELED"; // 서버는 이미 바뀌었고, reload는 서버 부하가 가니까 프론트엔드만 화면 바꿔줌
         } catch (error) {
