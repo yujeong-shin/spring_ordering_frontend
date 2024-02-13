@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeComponent from "@/components/HomeComponent.vue";
+import ItemList from "@/views/ItemList.vue";
 import LoginComponent from "@/views/LoginComponent.vue";
 // export default인 경우에는 {} 필요없고, 여러개 요소가 있는 경우에는 {} 필요
 import { memberRoutes } from "./memberRouter.js";
@@ -14,7 +14,7 @@ const routes = [
     // 이 라우터의 이름
     name: "HOME",
     // 화면 연결
-    component: HomeComponent,
+    component: ItemList,
   },
   {
     path: "/login",

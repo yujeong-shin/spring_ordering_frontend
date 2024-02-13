@@ -1,5 +1,5 @@
 <template>
-  <ItemListComponent :isAdmin="false" pageTitle="상품목록" />
+  <ItemListComponent :isAdmin="true" pageTitle="상품관리" />
 </template>
 <script>
 import ItemListComponent from "@/components/ItemListComponent.vue";
