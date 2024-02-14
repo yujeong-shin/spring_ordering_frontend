@@ -93,6 +93,7 @@
 </template>
 <script>
 import axios from "axios";
+import { mapActions } from "vuex";
 export default {
   props: ["isAdmin", "pageTitle"],
   data() {
@@ -116,6 +117,22 @@ export default {
     window.addEventListener("scroll", this.scrollPagination);
   },
   methods: {
+    // getters는 computed 안에서 가져왔지만 actions는 그냥 이렇게 가져옴
+    ...mapActions(["addToCart"]),
+    addCart() {
+      const orderItems = Object.keys(this.selectedItems)
+        .filter((key) => this.selectedItems[key] === true)
+        .map((key) => {
+          // statue에 담겨있는 this.itemList(장바구니)에서 현재 체크박스와 같은 id가 있는지 확인
+          const item = this.itemList.find((item) => item.id == key);
+          return { itemId: item.id, name: item.name, count: item.quantity };
+        });
+      // mutation 직접 호출 방식
+      // orderItems.forEach((item) => this.$store.commit("addToCart", item));
+      // actions를 통한 mutation 호출 방식
+      orderItems.forEach((item) => this.$store.dispatch("addToCart", item));
+      this.selectedItems = [];
+    },
     async placeOrder() {
       console.log(this.selectedItems);
       //   {
@@ -124,6 +141,7 @@ export default {
       // }
       // Object.keys : 위의 데이터 구조에서 1, 2 등 key 값 추출하는 메서드
       // [ {itemId:1, count:10}, {}, ... ] 형식(OrderReqItemDto)으로 담김
+
       const orderItems = Object.keys(this.selectedItems)
         .filter((key) => this.selectedItems[key] === true)
         .map((key) => {
@@ -131,6 +149,17 @@ export default {
           const item = this.itemList.find((item) => item.id == key);
           return { itemId: item.id, count: item.quantity };
         });
+
+      if (orderItems.length < 1) {
+        alert("주문대상 물건이 없습니다.");
+        return;
+      }
+
+      if (!confirm(`${orderItems.length}개의 상품을 주문하시겠습니까?`)) {
+        console.log("주문이 취소 되었습니다.");
+        return;
+      }
+
       const token = localStorage.getItem("token");
       const headers = token ? { Authorization: `Bearer ${token}` } : {};
       try {
@@ -180,6 +209,7 @@ export default {
     },
     searchItems() {
       this.itemList = [];
+      this.selectedItems = [];
       this.currentPage = 0;
       this.isLastPage = false;
       this.loadItems();
